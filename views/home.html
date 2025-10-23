@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>هوم بيدج</title>
+    <style>
+        :root {
+            --bg1: #f8fafc;
+            --bg2: #e6f7ff;
+            --accent: #0b79ff;
+        }
+        html,body {
+            height: 100%;
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg1), var(--bg2));
+            color: #0f172a;
+            direction: rtl;
+        }
+        .wrap {
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 36px 48px;
+            box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+            text-align: center;
+            max-width: 720px;
+            width: 100%;
+        }
+        h1 {
+            margin: 0 0 8px;
+            font-size: 48px;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+        p {
+            margin: 0 0 18px;
+            color: #475569;
+            font-size: 16px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 8px 18px rgba(11,121,255,0.18);
+        }
+        .meta {
+            margin-top: 14px;
+            font-size: 13px;
+            color: #64748b;
+        }
+        @media (max-width: 480px) {
+            .card { padding: 20px; }
+            h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <main class="card" role="main" aria-labelledby="page-title">
+            <h1 id="page-title">هوم نوتس بيدج</h1>
+            <p>تصميم بسيط لواجهة الصفحة الرئيسية — قابل للتعديل والابتداء من خلاله.</p>
+            <a class="btn" href="#">ابدأ الآن</a>
+            <div class="meta">© 2025 موقعك</div>
+        </main>
+    </div>
+</body>
+</html>
