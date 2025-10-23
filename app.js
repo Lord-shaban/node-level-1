@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const postModel = require('./models/post');
 const app = express();
 const port = 3000;
 app.use(express.json());
@@ -48,5 +49,18 @@ const sum = Number(num1) + Number(num2);
     res.send(`the sum is ${sum} `);
 });
 
+app.post('/posts', async (req, res) => {
+    const newPost = new postModel();
 
+    const postTitle = req.body.title;
+    const postContent = req.body.content;
+    const postAuthor = req.body.author;
 
+    newPost.title = postTitle;
+    newPost.content = postContent;
+    newPost.author = postAuthor;
+    newPost.date = new Date();
+    await newPost.save();
+    res.send('Post created successfully');
+   
+});
