@@ -1,19 +1,26 @@
 {
   "name": "node-level-1",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Node.js Express MongoDB API",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=18.x"
+  },
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "mongoose": "^8.19.2",
+    "mongoose": "^8.19.2"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.10"
   }
 }

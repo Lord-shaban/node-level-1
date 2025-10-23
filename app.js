@@ -2,14 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const postModel = require('./models/post');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
 app.use(express.json());
 
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
-});
-
-
+// الاتصال بقاعدة البيانات
 mongoose.connect('mongodb+srv://dearahmed65_db_user:SVE0jlafRQSNyhLR@cluster0.whuf9d6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => {
   console.log('Connected to MongoDB');
 }).catch((err) => {
@@ -79,3 +76,13 @@ app.delete("/posts/:id", async (req, res) => {
     await postModel.findByIdAndDelete(req.params.id);
     res.send('Post deleted successfully');
 });
+
+// للتطوير المحلي فقط
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`http://localhost:${port}`);
+  });
+}
+
+// تصدير للـ Vercel
+module.exports = app;
