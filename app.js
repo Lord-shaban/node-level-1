@@ -64,3 +64,18 @@ app.post('/posts', async (req, res) => {
     res.send('Post created successfully');
    
 });
+
+app.get("/posts", async (req, res) => {
+    const posts = await postModel.find({});
+    res.json(posts);
+});
+
+app.get("/posts/:id", async (req, res) => {
+    const post = await postModel.findById(req.params.id);
+    res.json(post);
+});
+
+app.delete("/posts/:id", async (req, res) => {
+    await postModel.findByIdAndDelete(req.params.id);
+    res.send('Post deleted successfully');
+});
