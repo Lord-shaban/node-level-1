@@ -1,14 +1,21 @@
 {
-  "name": "node-level-1",
+  "name": "notes-app-backend",
   "version": "1.0.0",
-  "description": "Node.js Express MongoDB API",
+  "description": "Professional Notes App Backend API with JWT Authentication",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "notes",
+    "express",
+    "mongodb",
+    "jwt",
+    "authentication",
+    "rest-api"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -16,8 +23,11 @@
     "node": ">=18.x"
   },
   "dependencies": {
-    "ejs": "^3.1.10",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.2"
   },
   "devDependencies": {

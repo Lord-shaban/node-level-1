@@ -1,86 +1,104 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const postModel = require('./models/post');
+const cors = require('cors');
+require('dotenv').config();
+
+// Import routes
+const authRoutes = require('./routes/authRoutes');
+const noteRoutes = require('./routes/noteRoutes');
+
+// Import middleware
+const { errorHandler, notFound } = require('./middleware/errorHandler');
+
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://dearahmed65_db_user:SVE0jlafRQSNyhLR@cluster0.whuf9d6.mongodb.net/notes-app?retryWrites=true&w=majority&appName=Cluster0';
 
+// ===================
+// Middleware
+// ===================
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// الاتصال بقاعدة البيانات
-mongoose.connect('mongodb+srv://dearahmed65_db_user:SVE0jlafRQSNyhLR@cluster0.whuf9d6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => {
-  console.log('Connected to MongoDB');
-}).catch((err) => {
-  console.log(err);
-});
+// تعطيل Cache في التطوير
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    next();
+  });
+}
 
-
-// منع التخزين المؤقت (Cache) للتطوير
+// Logging middleware
 app.use((req, res, next) => {
-  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
 
-app.get('/home', (req, res) => {
-  res.sendFile('./views/home.html', { root: __dirname });
-});
-app.get('/test', (req, res) => {
-    let num="";
-    for(let i=0 ; i <= 100 ; i++){
-        num += i + " "
-    }
-  res.send(`${num}`);
-});
+// ===================
+// Database Connection
+// ===================
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('✅ Connected to MongoDB successfully');
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err.message);
+    process.exit(1);
+  });
 
-app.post("/add",(req,res)=>{
-//   res.send(`${req.body.name} hello yor are ${req.query.age} years old`);
-res.json({
-    name: req.body.name,
-    age: req.query.age
-})
-});
+// ===================
+// Routes
+// ===================
 
-app.get('/sum/:num1/:num2', (req,res) => {
-const num1 = req.params.num1;
-const num2 = req.params.num2;
-const sum = Number(num1) + Number(num2);
-    res.send(`the sum is ${sum} `);
-});
-
-app.post('/posts', async (req, res) => {
-    const newPost = new postModel();
-
-    const postTitle = req.body.title;
-    const postContent = req.body.content;
-    const postAuthor = req.body.author;
-
-    newPost.title = postTitle;
-    newPost.content = postContent;
-    newPost.author = postAuthor;
-    newPost.date = new Date();
-    await newPost.save();
-    res.send('Post created successfully');
-   
+// Welcome route
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'مرحباً بك في Notes API',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      notes: '/api/notes'
+    },
+    documentation: 'راجع ملف API_DOCUMENTATION.md'
+  });
 });
 
-app.get("/posts", async (req, res) => {
-    const posts = await postModel.find({});
-    res.json(posts);
+// Health check
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'السيرفر يعمل بشكل جيد',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
-app.get("/posts/:id", async (req, res) => {
-    const post = await postModel.findById(req.params.id);
-    res.json(post);
-});
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/notes', noteRoutes);
 
-app.delete("/posts/:id", async (req, res) => {
-    await postModel.findByIdAndDelete(req.params.id);
-    res.send('Post deleted successfully');
-});
+// ===================
+// Error Handling
+// ===================
+
+// 404 Handler
+app.use(notFound);
+
+// Global Error Handler
+app.use(errorHandler);
+
+// ===================
+// Server
+// ===================
 
 // للتطوير المحلي فقط
 if (process.env.NODE_ENV !== 'production') {
-  app.listen(port, () => {
-    console.log(`http://localhost:${port}`);
+  app.listen(PORT, () => {
+    console.log(`🚀 السيرفر يعمل على المنفذ ${PORT}`);
+    console.log(`📍 http://localhost:${PORT}`);
+    console.log(`🌍 البيئة: ${process.env.NODE_ENV || 'development'}`);
   });
 }
 
